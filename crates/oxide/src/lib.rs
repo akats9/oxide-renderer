@@ -1,11 +1,17 @@
-use pixels::Error;
-use winit::event_loop::EventLoop;
+//! Oxide: Software renderer and mini game engine.
 
 pub use renderer::Renderer;
 pub use app::App;
+pub use game::Game;
 
+/// Represents a 4 channel RGBA color with 4 bytes per pixel
+#[derive(Clone, Copy)]
 pub struct ColorRGBA(pub u8, pub u8, pub u8, pub u8);
+
+/// Represents a single point on the screen. Origin is at top-left.
+#[derive(Clone, Copy)]
 pub struct Point(pub usize, pub usize);
 
-pub mod app;
-pub mod renderer;
+mod app;
+mod renderer;
+mod game;

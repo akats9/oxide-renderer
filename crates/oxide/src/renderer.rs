@@ -1,7 +1,10 @@
+//! Renderer module.
+
 use pixels::{Pixels, Error};
 use winit::dpi::PhysicalSize;
 use crate::{Point, ColorRGBA};
 
+/// Provides methods for rendering to the screen.
 #[derive(Default)]
 pub struct Renderer {
     pixels: Option<Pixels<'static>>,
@@ -10,7 +13,8 @@ pub struct Renderer {
 }
 
 impl Renderer {
-    pub fn new(pixels: Pixels<'static>, w: usize, h: usize) -> Self {
+    /// Create a new instance of Renderer.
+    pub(crate) fn new(pixels: Pixels<'static>, w: usize, h: usize) -> Self {
         Self {
             pixels: Some(pixels),
             screen_width: w,
@@ -18,14 +22,16 @@ impl Renderer {
         }
     }
 
-    pub fn render(&mut self) -> Result<(), Error> {
+    /// Render pixels.
+    pub(crate) fn render(&mut self) -> Result<(), Error> {
         if let Some(pixels) = self.pixels.as_mut() {
             pixels.render()?;
         }
         Ok(())
     }
 
-    pub fn resize(&mut self, size: PhysicalSize<u32>) -> Result<(), Error> {
+    /// Resize window.
+    pub(crate) fn resize(&mut self, size: PhysicalSize<u32>) -> Result<(), Error> {
         if let Some(pixels) = self.pixels.as_mut() {
             pixels.resize_surface(size.width, size.height)?;
         }
@@ -34,6 +40,7 @@ impl Renderer {
 }
 
 impl Renderer {
+    /// Draw a single pixel with specified color.
     pub fn draw_pixel(&mut self, point: Point, color: ColorRGBA) {
         let frame = self.pixels.as_mut().unwrap().frame_mut();
         let Point(x, y) = point;
@@ -48,6 +55,7 @@ impl Renderer {
         frame[idx + 3] = color.3;
     }
 
+    /// Clear entire screen to specified color.
     pub fn clear(&mut self, clear: ColorRGBA) {
         let frame = self.pixels.as_mut().unwrap().frame_mut();
         for pixel in frame.chunks_exact_mut(4) {
@@ -57,8 +65,7 @@ impl Renderer {
             pixel[3] = clear.3;
         }
     }
-
-    pub fn draw_line(&mut self, p1: Point, p2: Point, color: ColorRGBA) {
-        
-    }
 }
+
+mod line;
+mod shapes;

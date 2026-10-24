@@ -1,21 +1,28 @@
+//! App module.
+//! Provides methods to create and initialize a
+//! winit window, GPU surface and event loop.
+
 use std::sync::Arc;
-use pixels::{Pixels, SurfaceTexture};
+use pixels::{Error, Pixels, SurfaceTexture};
 use winit::{
     application::ApplicationHandler, error::EventLoopError, event::WindowEvent, event_loop::{ActiveEventLoop, EventLoop}, window::{Window, WindowId},
 };
-use crate::{ColorRGBA, Point};
+use crate::Game;
 use crate::renderer::Renderer;
 use owo_colors::OwoColorize;
 
-pub struct App{
+/// Represents the game window.
+/// Holds Renderer and Game as well as params.
+pub struct App<G: Game> {
     window: Option<Arc<Window>>,
     renderer: Renderer,
     screen_width: usize,
     screen_height: usize,
     title: String,
+    game: Option<G>,
 }
 
-impl App {
+impl<G: Game> App<G> {
     pub fn new(title: impl Into<String>, width: usize, height: usize) -> Self {
         Self {
             window: None,
@@ -23,17 +30,19 @@ impl App {
             screen_width: width, 
             screen_height: height,
             title: title.into(),
+            game: None,
         }
     }
 
-    pub fn run(mut self) -> Result<(), EventLoopError> {
+    pub fn run(mut self, game: G) -> Result<(), EventLoopError> {
         let event_loop = EventLoop::new()?;
+        self.game = Some(game);
         event_loop.run_app(&mut self)?;
         Ok(())
     }
 }
 
-impl ApplicationHandler for App {
+impl<G: Game> ApplicationHandler for App<G> {
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
         let window = Arc::new(
             event_loop.create_window(Window::default_attributes()
@@ -64,7 +73,7 @@ impl ApplicationHandler for App {
                 event_loop.exit();
             },
             WindowEvent::RedrawRequested => {
-                match self.renderer.render() {
+                match self.redraw() {
                     Ok(()) => {}, 
                     Err(e) => {
                         println!("[{:^11}] {}", "Error:".bright_red().bold(), e);
@@ -83,5 +92,24 @@ impl ApplicationHandler for App {
             },
             _ => {}
         }
+    }
+}
+
+impl<G: Game> App<G> {
+    fn redraw(&mut self) -> Result<(), Error> {
+        let dt = 1.0 / 60.0;
+
+        if let Some(game) = self.game.as_mut() {
+            game.update(dt);
+            game.draw(&mut self.renderer);
+        }
+
+        self.renderer.render()?;
+
+        if let Some(window) = self.window.as_ref() {
+            window.request_redraw();
+        }
+
+        Ok(())
     }
 }
