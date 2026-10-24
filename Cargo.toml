@@ -1,8 +1,15 @@
-[package]
-name = "oxide"
+[workspace]
+resolver = "3"
+members = ["crates/oxide", "crates/playground"]
+default-members = ["crates/playground"]
+
+[workspace.package]
 version = "0.1.0"
 edition = "2024"
+license = "GPL-3.0-or-later"
 
-[dependencies]
+[workspace.dependencies]
 pixels = "0.17.2"
 winit = "0.30.13"
+owo-colors = "4.4.0"
+oxide = { path = "crates/oxide" }

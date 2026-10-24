@@ -1,0 +1,9 @@
+[package]
+name = "playground"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+oxide.workspace = true
+owo-colors.workspace = true
