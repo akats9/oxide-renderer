@@ -1,8 +1,10 @@
 //! Oxide: Software renderer and mini game engine.
 
+// ====== RE-EXPORTS ======
 pub use renderer::Renderer;
 pub use app::App;
 pub use game::Game;
+pub use renderer::sprites::Sprite;
 
 /// Represents a 4 channel RGBA color with 4 bytes per pixel
 #[derive(Clone, Copy)]

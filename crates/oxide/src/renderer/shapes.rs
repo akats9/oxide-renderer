@@ -93,4 +93,59 @@ impl Renderer {
             self.draw_line(p1, p3, color);
         }
     }
+
+    /// Draw a circle given its origin and radius, 
+    /// using specified color and fill option.
+    pub fn draw_circle(&mut self, origin: Point, radius: usize,  color: ColorRGBA, fill: bool) {
+        let Point(ox, oy) = origin;
+
+        if ox < radius || ox + radius > self.screen_width || oy < radius || oy + radius > self.screen_height { return; }
+        let mut points: Vec<(usize, usize)> = Vec::new();
+        let radius_sq = radius.pow(2);
+
+        if fill {
+            for dy in -(radius as i32)..=radius as i32 {
+                let y = oy as i32 + dy;
+                let dy_sq = dy.pow(2);
+
+                let rem = radius_sq as i32 - dy_sq;
+                if rem < 0 {continue;}
+
+                let dx_max = rem.isqrt();
+
+                for dx in -dx_max..=dx_max {
+                    let x = ox as i32 + dx;
+                    points.push((x as usize,y as usize));
+                }
+            }
+        } else {
+            let mut x = radius;
+            let mut y = 0;
+
+            let mut p: i32 = 1 - radius as i32;
+            while x > y {
+                y += 1;
+                if p <= 0 { p = p + 2*y as i32 + 1; }
+                else { x -= 1; p = p+ 2*y as i32 - 2*x as i32 + 1; }
+                if x < y { break; }
+                points.push((x as usize + ox, y as usize + oy));
+                points.push(((-(x as i32) + ox as i32) as usize, y as usize + oy));
+                points.push((x as usize + ox, (-(y as i32) + oy as i32) as usize));
+                points.push(((-(x as i32) + ox as i32) as usize, (-(y as i32) + oy as i32) as usize));
+                if x != y {
+                    points.push((y as usize + ox, x as usize + oy));
+                    points.push(((-(y as i32) + ox as i32) as usize, x as usize + oy));
+                    points.push((y as usize + ox, (-(x as i32) + oy as i32) as usize));
+                    points.push(((-(y as i32) + ox as i32) as usize, (-(x as i32) + oy as i32) as usize));
+                }
+            }
+        }
+        
+
+        for point in points {
+            let (x, y) = point;
+            self.draw_pixel(Point(x,y), color);
+        }
+
+    }
 }

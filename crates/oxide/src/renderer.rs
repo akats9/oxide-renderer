@@ -5,6 +5,8 @@ use winit::dpi::PhysicalSize;
 use crate::{Point, ColorRGBA};
 
 /// Provides methods for rendering to the screen.
+/// IMPORTANT: draw_*() methods on Renderer should be used for drawing simple static objects and scenes.
+/// For motion and layering use Sprites.
 #[derive(Default)]
 pub struct Renderer {
     pixels: Option<Pixels<'static>>,
@@ -69,3 +71,4 @@ impl Renderer {
 
 mod line;
 mod shapes;
+pub(crate) mod sprites;

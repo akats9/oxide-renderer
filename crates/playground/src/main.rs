@@ -19,5 +19,6 @@ impl Game for Playground {
         renderer.draw_rect(Point(25,25), Point(50,50), ColorRGBA(0, 0, 0xff, 0xff), true);
         renderer.draw_rect(Point(200,200), Point(100, 100), ColorRGBA(0, 0xff, 0, 0xaa), false);
         renderer.draw_triangle(Point(300,200), Point(200,300), Point(260, 260), ColorRGBA(0xcc, 0xcc, 0xcc, 0xcc), true);
+        renderer.draw_circle(Point(400,300), 100, ColorRGBA(0xaa, 0xbb, 0xcc, 0xdd), false);
     }
 }
