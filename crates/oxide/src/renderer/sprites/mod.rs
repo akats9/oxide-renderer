@@ -1,6 +1,6 @@
 //! Sprites module.
 
-use crate::{ColorRGBA, Point};
+use crate::{ColorRGBA, Point, Renderer};
 
 /// Velocity of a Sprite in x and y axes.
 #[derive(Clone, Copy)]
@@ -73,18 +73,24 @@ pub trait Sprite : Default {
     /// Check if the Sprite is within a bounding box.
     /// Useful for determining if a Sprite should be redrawn when another Sprite moves,
     /// improving performance.
-    fn is_in_bounding_box(&self, p1: Point, p2: Point) -> bool;
+    fn is_in_bounding_box(&self, b: Box) -> bool;
 
     /// Draw the Sprite.
-    fn draw(&mut self);
+    fn draw(&mut self, r: &mut Renderer);
 
     /// Clear the Sprite from screen.
-    fn clear(&mut self);
+    /// `bg` represents the color of the background.
+    /// Returns a bounding box that needs to be rerendered.
+    fn clear(&mut self, r: &mut Renderer, bg: ColorRGBA) -> Box;
 
     /// Move a Sprite from its current position to a specified position
     /// in specified duration (in timesteps)
     fn animate(&mut self, end_pos: Point, duration: usize);
 
 }
+
+/// Helper type to represent bounding boxes and other helper rects.
+/// Created from the endpoints of its diagonal.
+pub struct Box(Point, Point);
 
 pub mod rect;
