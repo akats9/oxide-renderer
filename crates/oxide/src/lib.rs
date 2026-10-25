@@ -5,6 +5,9 @@ pub use renderer::Renderer;
 pub use app::App;
 pub use game::Game;
 pub use renderer::sprites::Sprite;
+pub use renderer::sprites::AnySprite;
+pub use renderer::scene::Scene;
+pub use renderer::sprites;
 
 /// Represents a 4 channel RGBA color with 4 bytes per pixel
 #[derive(Clone, Copy)]

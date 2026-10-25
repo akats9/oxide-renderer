@@ -1,7 +1,5 @@
 //! Rectangle Sprite object.
 
-use std::cmp::{max, min};
-
 use crate::{ColorRGBA, Point, Renderer, Sprite};
 use super::{Velocity, Shape, Box};
 
@@ -77,27 +75,16 @@ impl Sprite for Rect {
     fn is_in_bounding_box(&self, b: Box) -> bool {
         let Point(x1,y1) = self.p1;
         let Point(x2, y2) = self.p2;
-        let Point(x3, y3) = Point(x1, y2);
-        let Point(x4, y4) = Point(x2, y1);
-
-        let Box(b1, b2) = b;
-        let Point(bx1, by1) = b1;
-        let Point(bx2, by2) = b2;
+        let p3 = Point(x1, y2);
+        let p4 = Point(x2, y1);
 
         if 
-            is_between(x1, bx1, bx2) && is_between(y1, by1, by2) 
-            || is_between(x2, bx1, bx2) && is_between(y2, by1, by2)
-            || is_between(x3, bx1, bx2) && is_between(y3, by1, by2)
-            || is_between(x4, bx1, bx2) && is_between(y4, by1, by2)
+            b.contains(self.p1) || b.contains(self.p2) || b.contains(p3) || b.contains(p4)
         {
             return true;
         }
 
         false
-    }
-
-    fn animate(&mut self, end_pos: Point, duration: usize) {
-        unimplemented!()
     }
 }
 
@@ -106,9 +93,9 @@ impl Default for Rect {
         Self {
             pos: Point(0, 0),
             p1: Point(0, 0),
-            p2: Point(1,1),
+            p2: Point(0, 0),
             v: Velocity(0, 0),
-            color: ColorRGBA(0xff, 0xff, 0xff, 0xff),
+            color: ColorRGBA(0, 0, 0, 0),
             shown: false,
             z: 0,
             fill: true,
@@ -119,7 +106,9 @@ impl Default for Rect {
 impl Rect {
     /// Initializes the dimensions and starting position 
     /// of the Sprite and sets `shown` to `true`.
-    fn init(&mut self, p1: Point, p2: Point, fill: bool) {
+    pub fn init(&mut self, p1: Point, p2: Point, fill: bool, r: &Renderer) {
+        let screen_bounds = Box(Point(0,0), Point(r.screen_width, r.screen_height));
+        if !screen_bounds.contains(p1) || !screen_bounds.contains(p2) { return; }
         self.p1 = p1;
         self.p2 = p2;
         self.fill = fill;
@@ -132,8 +121,3 @@ impl Rect {
     }
 }
 
-fn is_between(v: usize, a: usize, b: usize) -> bool {
-    let min = min(a, b);
-    let max = max(a, b);
-    (min..=max).contains(&v)
-}

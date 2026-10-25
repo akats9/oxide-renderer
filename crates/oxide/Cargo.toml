@@ -9,3 +9,4 @@ description = "Low level graphics lib"
 pixels.workspace = true
 winit.workspace = true
 owo-colors.workspace = true
+min-max.workspace = true

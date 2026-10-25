@@ -71,4 +71,5 @@ impl Renderer {
 
 mod line;
 mod shapes;
-pub(crate) mod sprites;
+pub mod sprites;
+pub(crate) mod scene;
