@@ -8,6 +8,7 @@ pub use renderer::sprites::Sprite;
 pub use renderer::sprites::AnySprite;
 pub use renderer::scene::Scene;
 pub use renderer::sprites;
+pub use assets::Assets;
 
 /// Represents a 4 channel RGBA color with 4 bytes per pixel
 #[derive(Clone, Copy)]
@@ -20,3 +21,4 @@ pub struct Point(pub usize, pub usize);
 mod app;
 mod renderer;
 mod game;
+mod assets;

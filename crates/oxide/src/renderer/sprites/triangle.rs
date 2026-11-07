@@ -115,7 +115,7 @@ impl Triangle {
             let Point(x3,y3) = p3;
             Point((x1+x2+x3)/3, (y1+y2+y3)/3)
         };
-
+        self.fill = fill;
         self.shown = true;
     }
 }

@@ -1,4 +1,4 @@
-use oxide::{AnySprite, App, ColorRGBA, Game, Point, Scene, Sprite, sprites};
+use oxide::{AnySprite, App, ColorRGBA, Game, Point, Scene, Sprite, sprites, Assets};
 
 fn main() {
     println!("Hello, world!");
